@@ -1,4 +1,4 @@
-set -Eeuo pipefail  # See the meaning in scripts/README.md
+set -Euo pipefail  # See the meaning in scripts/README.md
 # set -x  # Print each command
 
 setup_source_bash_already_run=1
@@ -9,21 +9,21 @@ setup_source_bash_already_run=1
 #
 #-----------------------------------------------------------------------------
 
-if [ "$(basename "$0")" == bash ]
-then
-    printf "error: script \"%s\" should be sourced from another script, not from the terminal\n"  \
-        "$BASH_SOURCE" 1>&2
+# if [ "$(basename "$0")" == bash ]
+# then
+#    printf "error: script \"%s\" should be sourced from another script, not from the terminal\n"  \
+#        "$BASH_SOURCE" 1>&2
+#
+#    return 1
+# fi
 
-    exit 1
-fi
-
-if [ "$0" == "$BASH_SOURCE" ]
-then
-    printf "error: script \"%s\" should be sourced from another script, not used alone\n"  \
-        "$0" 1>&2
-
-    exit 1
-fi
+# if [ "$0" == "$BASH_SOURCE" ]
+# then
+#    printf "error: script \"%s\" should be sourced from another script, not used alone\n"  \
+#        "$0" 1>&2
+#
+#    return 1
+# fi
 
 #-----------------------------------------------------------------------------
 #
@@ -54,7 +54,7 @@ adj_path_for_gowin_win ()
 
 #-----------------------------------------------------------------------------
 
-script=$(basename "$0")
+script=$(basename "${BASH_SOURCE[0]}")
 log="$PWD/log.txt"
 
 if [[ $script =~ check_setup_and_choose_fpga_board ]]
@@ -70,11 +70,13 @@ then
 else
     offer_to_create_a_new_fpga_board_select_file=0
 
-    cd $(dirname "$0")
-    mkdir -p run
-    cd run
+    # Проверка: если мы уже в папке run, не заходим в неё снова
+        if [ "$(basename "$PWD")" != "run" ]; then
+            mkdir -p run
+            cd run
+        fi
 
-    inside_run_dir=1
+        inside_run_dir=1
 fi
 
 lab_name=$(basename "$(readlink -f ..)")
@@ -117,7 +119,7 @@ error ()
         read -n 1 -p "Press any key "
     fi
 
-    exit 1
+    return 1
 }
 
 #-----------------------------------------------------------------------------
@@ -197,13 +199,13 @@ fi
 #-----------------------------------------------------------------------------
 
 source "$script_dir/steps/00_setup_intel_fpga.source_bash"
-source "$script_dir/steps/00_setup_gowin.source_bash"
-source "$script_dir/steps/00_setup_efinity.source_bash"
-source "$script_dir/steps/00_setup_xilinx.source_bash"
-source "$script_dir/steps/00_setup_libre_lane.source_bash"
+# source "$script_dir/steps/00_setup_gowin.source_bash"
+# source "$script_dir/steps/00_setup_efinity.source_bash"
+# source "$script_dir/steps/00_setup_xilinx.source_bash"
+# source "$script_dir/steps/00_setup_libre_lane.source_bash"
 source "$script_dir/steps/00_setup_icarus.source_bash"
-source "$script_dir/steps/00_setup_yosys.source_bash"
-source "$script_dir/steps/00_setup_rars.source_bash"
+# source "$script_dir/steps/00_setup_yosys.source_bash"
+# source "$script_dir/steps/00_setup_rars.source_bash"
 
 #-----------------------------------------------------------------------------
 #
@@ -364,9 +366,9 @@ fpga_board_setup ()
 {
     fpga_toolchain=none
 
-    if ! [[ $script =~ fpga ]] ; then
-        return
-    fi
+    # if ! [[ $script =~ fpga ]] ; then
+    #    return
+    # fi
 
     #-------------------------------------------------------------------------
 
@@ -482,15 +484,19 @@ case $fpga_toolchain in
         fi
     ;;
 
-    gowin   ) gowin_setup_ide     ;;
-    efinity ) efinity_setup_ide   ;;
-    xilinx  ) xilinx_setup_vivado ;;
-    yosys   ) setup_yosys         ;;
+    # gowin   ) gowin_setup_ide     ;;
+    # efinity ) efinity_setup_ide   ;;
+    # xilinx  ) xilinx_setup_vivado ;;
+    # yosys   ) setup_yosys         ;;
 esac
 
-librelane_setup
+# librelane_setup
 icarus_verilog_setup
 
-if [ -f ../program.s ] ; then
-    rars_setup
-fi
+# if [ -f ../program.s ] ; then
+#    rars_setup
+# fi
+
+# Заглушка, чтобы скрипты синтеза не падали
+rars_setup () { :; }
+rars_assembly () { :; }
