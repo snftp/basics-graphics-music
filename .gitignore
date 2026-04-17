@@ -3,3 +3,5 @@ work/
 librelane_designs/
 log.txt
 fpga_board_selection
+vscode-server-linux-x64.tar
+*.tar
