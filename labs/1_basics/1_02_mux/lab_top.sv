@@ -124,7 +124,7 @@ module lab_top
     // without using "?" operation, "if", "case" or a bit selection.
     // Use only operations "&", "|", "~" and parenthesis, "(" and ")".
 
-    wire mux4 = 1'b0;
+    wire mux4 = (sel & a) | (~sel & b);
 
     //------------------------------------------------------------------------
 
@@ -132,20 +132,35 @@ module lab_top
 
     wire [0:7] table5 =
     {
-        1'b0, // sel = 0, a = 0, b = 0
-        1'b1, // sel = 0, a = 0, b = 1
-        1'b0, // sel = 0, a = 1, b = 0
-        1'b1, // sel = 0, a = 1, b = 1
-        1'b0, // sel = 1, a = 0, b = 0
-        1'b0, // sel = 1, a = 0, b = 1
-        1'b1, // sel = 1, a = 1, b = 0
-        1'b1  // sel = 1, a = 1, b = 1
+        1'b0, // sel = 0, a = 0, b = 0 -> b (0) <- 0
+        1'b1, // sel = 0, a = 0, b = 1 -> b (1) <- 1
+        1'b0, // sel = 0, a = 1, b = 0 -> b (0) <- 0
+        1'b1, // sel = 0, a = 1, b = 1 -> b (1) <- 1
+
+        1'b0, // sel = 1, a = 0, b = 0 -> a (0) <- 0
+        1'b0, // sel = 1, a = 0, b = 1 -> a (0) <- 0
+        1'b1, // sel = 1, a = 1, b = 0 -> a (1) <- 1
+        1'b1  // sel = 1, a = 1, b = 1 -> a (1) <- 1
     };
 
     wire mux5 = table5 [{ sel, a, b }];
 
     // Exercise 2: Change the table to get the correct result by doing
-    // wire mux5_2 = table5_2 [{ a, b, sel }];
+
+    wire [0:7] table5_2 =
+    {
+        1'b0, // 000 -> b -> 0        0
+        1'b0, // 001 -> a -> 0        1
+        1'b1, // 010 -> b -> 1        2
+        1'b0, // 011 -> a -> 0        3
+
+        1'b0, // 100 -> b -> 0        4
+        1'b1, // 101 -> a -> 1        5
+        1'b1, // 110 -> b -> 1        6
+        1'b1  // 111 -> a -> 1        7
+    };
+
+    wire mux5_2 = table5_2 [{ a, b, sel }];
 
     //------------------------------------------------------------------------
 
