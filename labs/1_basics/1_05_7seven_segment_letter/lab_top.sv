@@ -86,6 +86,8 @@ module lab_top
         P     = 8'b1100_1110,
         G     = 8'b1011_1100,
         A     = 8'b1110_1110,
+        H     = 8'b0110_1110,
+        E     = 8'b1001_1110,
         space = 8'b0000_0000
     }
     seven_seg_encoding_e;
@@ -94,15 +96,19 @@ module lab_top
     assign digit    = w_digit' (key [1] ? 2'b10 : 2'b01);
 
     // Exercise 1: Display the first letters
-    // of your first name and last name instead.
+    // of your first name and last name (T ???) instead.
 
-    // assign abcdefgh = ...
-    // assign digit    = ...
+    assign abcdefgh = key [0] ? H : E;
+    assign digit    = w_digit' (2'b01);
+
+    /* В SystemVerilog апостроф перед открывающей скобкой Type'(Expression)
+    используется для принудительного приведения результата выражения
+    к определенному типу данных или разрядности.
+    В коде объявлен пользовательский тип */
 
     // Exercise 2: Display letters of a 4-character word
     // using this code to display letter of FPGA as an example
 
-    /*
     seven_seg_encoding_e letter;
 
     always_comb
@@ -116,6 +122,5 @@ module lab_top
 
     assign abcdefgh = letter;
     assign digit    = w_digit' (key);
-    */
 
 endmodule

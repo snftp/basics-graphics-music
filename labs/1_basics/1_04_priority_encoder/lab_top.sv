@@ -197,6 +197,7 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    assign led = w_led' ({ enc0, enc1, enc2, enc3 });
+    // assign led = w_led' ({ enc0, enc1, enc2, enc3 });
+    assign led = enc3;
 
 endmodule

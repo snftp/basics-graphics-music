@@ -89,15 +89,15 @@ module lab_top
 
     always_comb
         case (in)
-        2'b00: dec1 = 4'b0001;
-        2'b01: dec1 = 4'b0010;
-        2'b10: dec1 = 4'b0100;
-        2'b11: dec1 = 4'b1000;
+        2'b00: dec1 = 4'b0001; // -> 1
+        2'b01: dec1 = 4'b0010; // -> 2
+        2'b10: dec1 = 4'b0100; // -> 4
+        2'b11: dec1 = 4'b1000; // -> 8
         endcase
 
     // Implementation 3: shift
 
-    wire [3:0] dec2 = 4'b0001 << in;
+    wire [3:0] dec2 = 4'b0001 << in; // сдвиг влево как умножение 1 на 2 в степени (0 1 2 3) -> (1 2 4 8)
 
     // Implementation 4: index
 
@@ -112,5 +112,6 @@ module lab_top
     //------------------------------------------------------------------------
 
     assign led = w_led' ({ dec0, dec1, dec2, dec3 });
+    // assign led = dec3;
 
 endmodule
