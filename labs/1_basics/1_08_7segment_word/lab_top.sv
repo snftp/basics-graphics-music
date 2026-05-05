@@ -78,7 +78,7 @@ module lab_top
         else
             cnt <= cnt + 1'd1;
 
-    wire enable = (cnt [22:0] == '0);
+    wire enable = (cnt [20:0] == '0);
 
     //------------------------------------------------------------------------
 
@@ -86,7 +86,7 @@ module lab_top
 
     always_ff @ (posedge clk or posedge rst)
       if (rst)
-        shift_reg <= w_digit' (1);
+        shift_reg <= w_digit' (1); // статическое приведение разрядности для десятичного числа 1
       else if (enable)
         shift_reg <= { shift_reg [0], shift_reg [w_digit - 1:1] };
 
@@ -134,8 +134,35 @@ module lab_top
 
     // Exercise 2: Put your name or another word to the display.
 
+    typedef enum bit [7:0]
+    {
+        five     = 8'b1011_0111,
+        zero     = 8'b1111_1101,
+        one      = 8'b0000_1101,
+        space    = 8'b0000_0000
+    }
+    seven_seg_encoding_e;
+
+    seven_seg_encoding_e letter;
+
+    always_comb
+      case (4' (shift_reg))
+      4'b1000: letter = five;
+      4'b0100: letter = zero;
+      4'b0010: letter = five;
+      4'b0001: letter = one;
+      default: letter = space;
+      endcase
+
     // Exercise 3: Comment out the "default" clause from the "case" statement
     // in the "always" block,and re-synthesize the example.
     // Are you getting any warnings or errors? Try to explain why.
+
+    /* Error (10166): SystemVerilog RTL Coding error at lab_top.sv(149): always_comb construct does not infer purely combinational logic.
+    С точки зрения булевой алгебры, функция должна быть полностью определена на всей области значений входных переменных.
+    Если в операторе case отсутствуют некоторые варианты значений селектора и нет ветки default, возникает ситуация,
+    когда при определенных входных данных новое значение сигналу не присваивается.
+    В терминах цифровой схемотехники это интерпретируется как команда «сохранить предыдущее состояние».
+    Если для значения селектора N нет инструкции, синтезатор вынужден вставить элемент памяти — защелку (latch), чтобы удерживать старое значение сигнала. */
 
 endmodule
