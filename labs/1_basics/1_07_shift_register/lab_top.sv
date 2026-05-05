@@ -59,9 +59,9 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    // assign led        = '0;
-       assign abcdefgh   = '0;
-       assign digit      = '0;
+    //    assign led        = '0;
+    //    assign abcdefgh   = '0;
+    //    assign digit      = '0;
        assign red        = '0;
        assign green      = '0;
        assign blue       = '0;
@@ -82,24 +82,69 @@ module lab_top
 
     //------------------------------------------------------------------------
 
-    wire button_on = | key;
+//    wire button_on = |key;
 
-    logic [w_led - 1:0] shift_reg;
+//    logic [w_led - 1:0] shift_reg;
 
-    always_ff @ (posedge clk or posedge rst)
-        if (rst)
-            shift_reg <= '1;
-        else if (enable)
-            shift_reg <= { button_on, shift_reg [w_led - 1:1] };
-
-    assign led = shift_reg;
+//     always_ff @ (posedge clk or posedge rst)
+//         if (rst)
+//             shift_reg <= '(1); // // статическое приведение разрядности для десятичного числа 1
+//         else if (enable)
+//             shift_reg <= { button_on, shift_reg [w_led - 1:1] };
+//
+//     assign led = shift_reg;
 
     // Exercise 1: Make the light move in the opposite direction.
+
+//     always_ff @ (posedge clk or posedge rst)
+//         if (rst)
+//             shift_reg <= '0;
+//         else if (enable)
+//             shift_reg <= { shift_reg [w_led - 2:0], button_on};
+//
+//     assign led = shift_reg;
 
     // Exercise 2: Make the light moving in a loop.
     // Use another key to reset the moving lights back to no lights.
 
+//     logic [w_led - 1:0] shift_reg;
+//     logic flag_reg;
+//
+//     wire turn_off = |key[0];
+//
+//     always_ff @ (posedge clk or posedge rst)
+//         if (rst)
+//             shift_reg <= w_led' (1);
+//         else if (turn_off) // нельзя объединять этот случай с rst тк оператор if должен проверять только тот сигнал, который является асинхронным сбросом
+//         begin
+//             shift_reg <= '0;
+//             flag_reg <= 1'b1;
+//         end
+//         else if (enable)
+//         begin
+//             if (flag_reg)
+//             begin
+//                 shift_reg <= { 1'b1, shift_reg [w_led - 1:1] };
+//                 flag_reg <= 1'b0;
+//             end
+//             else
+//                 shift_reg <= { shift_reg[0], shift_reg [w_led - 1:1] };
+//         end
+//
+//     assign led = shift_reg;
+
     // Exercise 3: Display the state of the shift register
     // on a seven-segment display, moving the light in a circle.
+
+    logic [5:0] shift_reg;
+
+    always_ff @ (posedge clk or posedge rst)
+        if (rst)
+            shift_reg <= 6'b1;
+        else if (enable)
+            shift_reg <= { shift_reg[0], shift_reg [5:1] };
+
+    assign abcdefgh = { shift_reg, 2'b00};
+    assign digit = 4'b1111;
 
 endmodule
