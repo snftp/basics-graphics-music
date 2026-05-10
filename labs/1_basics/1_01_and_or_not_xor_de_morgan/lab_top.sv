@@ -124,6 +124,6 @@ module lab_top
 
     assign left = ~ (a | b);
     assign right = ~ a & ~ b;
-    assign led [0] = ~ (left ^ right) ;
+    assign led [0] = ~ (left ^ right);
 
 endmodule

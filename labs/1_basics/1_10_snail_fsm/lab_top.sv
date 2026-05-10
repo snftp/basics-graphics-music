@@ -75,25 +75,48 @@ module lab_top
 
     // Generate a strobe signal 3 times a second
 
-    strobe_gen
-    # (.clk_mhz (clk_mhz), .strobe_hz (3))
-    i_strobe_gen
-    (.strobe (enable), .*);
+    strobe_gen #(
+        .clk_mhz (clk_mhz),
+        .strobe_hz (3)
+    ) i_strobe_gen (
+        .strobe (enable),
+        .*
+    );
 
-    shift_reg # (.depth (w_led)) i_shift_reg
-    (
-        .en      (   enable ),
+    /*  Строб-генератор который с переодичность в 3 Гц
+        генерерует сигнал стробирования чтобы с этой периодичность
+        записывать в сдвиговый регистр состояние кнопки
+        У нас сдвиговый регистр имеет размерность количества светодиодов
+        значит от может хранить 4 последних состояния кнопки  */
+
+    shift_reg # (.depth (w_led)
+    ) i_shift_reg (
+        .en      (   enable ), // enable - раз в 3 секунды
         .seq_in  ( | key    ),
-        .seq_out (   fsm_in ),
+        .seq_out (   fsm_in ), // выход сдвигового регстра подается на конечный автомат
         .par_out (   led    ),
         .*
     );
 
-    snail_moore_fsm i_moore_fsm
-        (.en (enable), .a (fsm_in), .y (moore_fsm_out), .*);
+    /* Два одинаковых по функционалу конечных автомата
+       написанных в разных форматах.
+       На вход приходит состояние кнопок со сдвигового регистра
+       На выходе была распознана последовательность нажатий
+       или нет */
 
-    snail_mealy_fsm i_mealy_fsm
-        (.en (enable), .a (fsm_in), .y (mealy_fsm_out), .*);
+    snail_moore_fsm i_moore_fsm (
+        .en ( enable ),
+        .a  ( fsm_in ),
+        .y  ( moore_fsm_out ),
+        .*
+    );
+
+    snail_mealy_fsm i_mealy_fsm (
+        .en ( enable ),
+        .a  ( fsm_in ),
+        .y  ( mealy_fsm_out ),
+        .*
+    );
 
     //------------------------------------------------------------------------
 
@@ -120,6 +143,6 @@ module lab_top
     end
 
     // Exercise: Implement FSM for recognizing other sequence,
-    // for example 0101
+    // for example 10110
 
 endmodule

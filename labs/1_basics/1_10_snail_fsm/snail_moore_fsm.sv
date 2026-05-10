@@ -11,11 +11,14 @@ module snail_moore_fsm
     output y
 );
 
-    typedef enum bit [1:0]
+    typedef enum bit [2:0]
     {
-        S0 = 2'd0,
-        S1 = 2'd1,
-        S2 = 2'd2
+        S0 = 3'd0,
+        S1 = 3'd1,
+        S2 = 3'd2,
+        S3 = 3'd3,
+        S4 = 3'd4,
+        S5 = 3'd5
     }
     state_e;
 
@@ -36,21 +39,35 @@ module snail_moore_fsm
         next_state = state;
 
         case (state)
-        S0: if (~ a) next_state = S1;
-        S1: if (  a) next_state = S2;
+        S0:
+            if (  a) next_state = S1;
 
-        // S2: next_state = a ? S0 : S1;
+        S1:
+            if (~ a) next_state = S2;
 
-        S2: if (a)
-                    next_state = S0;
+        S2:
+            if (  a) next_state = S3;
+            else     next_state = S0;
+
+        S3:
+            if (  a) next_state = S4;
+            else     next_state = S0;
+
+        S4: if (~ a) next_state = S5;
+            else     next_state = S1;
+
+        // S5: next_state = a ? S3 : S0;
+
+        S5: if (a)
+                    next_state = S3;
                 else
-                    next_state = S1;
+                    next_state = S0;
 
         endcase
     end
 
     // Output logic based on current state
 
-    assign y = (state == S2);
+    assign y = (state == S5);
 
 endmodule
