@@ -67,20 +67,20 @@ module lab_top
 
     // Exercise: Add nodes 13 and 23 to systolic array
 
-    // syst_node #(
-    //     .W_WIDTH  (8),
-    //     .X_WIDTH  (8),
-    //     .SI_WIDTH (18),
-    //     .SO_WIDTH (19)
-    // ) node_13 (
-    //     .clk      (clk),
-    //     .rst      (rst),
-    //     .weight_i (),
-    //     .psumm_i  (),
-    //     .x_i      (),
-    //     .psumm_o  (),
-    //     .x_o      ()
-    // );
+    syst_node #(
+        .W_WIDTH  (8),
+        .X_WIDTH  (8),
+        .SI_WIDTH (18),
+        .SO_WIDTH (19)
+    ) node_13 (
+        .clk      (clk),
+        .rst      (rst),
+        .weight_i (W13),
+        .psumm_i  (psumm12),
+        .x_i      (x3),
+        .psumm_o  (psumm13),
+        .x_o      (x3_pipe)
+    );
 
 
     syst_node #(
@@ -116,23 +116,23 @@ module lab_top
 
     // Exercise: Add nodes 13 and 23 to systolic array
 
-    // syst_node #(
-    //     .W_WIDTH  (8),
-    //     .X_WIDTH  (8),
-    //     .SI_WIDTH (18),
-    //     .SO_WIDTH (19)
-    // ) node_23 (
-    //     .clk      (clk),
-    //     .rst      (rst),
-    //     .weight_i (),
-    //     .psumm_i  (),
-    //     .x_i      (),
-    //     .psumm_o  (),
-    //     .x_o      ()
-    // );
+    syst_node #(
+        .W_WIDTH  (8),
+        .X_WIDTH  (8),
+        .SI_WIDTH (18),
+        .SO_WIDTH (19)
+    ) node_23 (
+        .clk      (clk),
+        .rst      (rst),
+        .weight_i (W23),
+        .psumm_i  (psumm22),
+        .x_i      (x3_pipe),
+        .psumm_o  (psumm23),
+        .x_o      ()
+    );
 
 
-    assign y1 = psumm12;
-    assign y2 = psumm22;
+    assign y1 = psumm13;
+    assign y2 = psumm23;
 
 endmodule

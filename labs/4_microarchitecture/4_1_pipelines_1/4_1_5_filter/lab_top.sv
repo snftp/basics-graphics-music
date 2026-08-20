@@ -81,6 +81,10 @@ module lab_top
     logic [w_sw_actual-1:0] input_stage_1_ff;
     logic [w_sw_actual-1:0] input_stage_2_ff;
     logic [w_sw_actual-1:0] input_stage_3_ff;
+    logic [w_sw_actual-1:0] input_stage_4_ff;
+    logic [w_sw_actual-1:0] input_stage_5_ff;
+    logic [w_sw_actual-1:0] input_stage_6_ff;
+    logic [w_sw_actual-1:0] input_stage_7_ff;
 
     logic [w_sw_actual+1:0] register_summ;
     logic [w_sw_actual-1:0] filter_output;
@@ -93,21 +97,33 @@ module lab_top
             input_stage_1_ff <= '0;
             input_stage_2_ff <= '0;
             input_stage_3_ff <= '0;
+            input_stage_4_ff <= '0;
+            input_stage_5_ff <= '0;
+            input_stage_6_ff <= '0;
+            input_stage_7_ff <= '0;
         end
         else begin
             input_stage_0_ff <= sw;
             input_stage_1_ff <= input_stage_0_ff;
             input_stage_2_ff <= input_stage_1_ff;
             input_stage_3_ff <= input_stage_2_ff;
+            input_stage_4_ff <= input_stage_3_ff;
+            input_stage_5_ff <= input_stage_4_ff;
+            input_stage_6_ff <= input_stage_5_ff;
+            input_stage_7_ff <= input_stage_6_ff;
         end
 
 
     assign register_summ = input_stage_0_ff
                          + input_stage_1_ff
                          + input_stage_2_ff
-                         + input_stage_3_ff;
+                         + input_stage_3_ff
+                         + input_stage_4_ff
+                         + input_stage_5_ff
+                         + input_stage_6_ff
+                         + input_stage_7_ff;
 
-    assign filter_output = register_summ >> 2;
+    assign filter_output = register_summ >> 3;
 
 
     localparam w_display_number = w_digit * 4;

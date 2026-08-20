@@ -104,7 +104,7 @@ module lab_top
     //  |     |
     //   --d--  h
 
-    typedef enum bit [7:0]
+    /* typedef enum bit [7:0]
     {
         F     = 8'b1000_1110,
         P     = 8'b1100_1110,
@@ -124,9 +124,10 @@ module lab_top
       4'b0001: letter = A;
       default: letter = space;
       endcase
-
+    */
+    
     assign abcdefgh = letter;
-    assign digit    = shift_reg;
+    assign digit    = shift_reg; 
 
     // Exercise 1: Increase the frequency of enable signal
     // to the level your eyes see the letters as a solid word
